@@ -46,12 +46,11 @@ const items = [
 ];
 
 export function Products() {
-
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [category,setCategory]= useState('Seafood');
+  const [category, setCategory] = useState("Seafood");
   const [dishes, setDishes] = useState([]);
   const [load, setLoad] = useState(true);
   const [errormeal, setErrormeal] = useState(null);
@@ -59,9 +58,11 @@ export function Products() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+        const response = await fetch(
+          "https://www.themealdb.com/api/json/v1/1/list.php?c=list"
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setCategories(data.meals);
@@ -75,19 +76,15 @@ export function Products() {
     fetchCategories();
   }, []);
 
-  
-
-
-
-  
-
   useEffect(() => {
     const fetchDishes = async () => {
       setLoad(true);
       try {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+        const response = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setDishes(data.meals);
@@ -101,10 +98,6 @@ export function Products() {
     fetchDishes();
   }, [category]);
 
-
-
- 
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -112,13 +105,6 @@ export function Products() {
   if (errormeal) {
     return <div>Error: {errormeal.message}</div>;
   }
-
-
-  
-  
-
-
-
 
   return (
     <>
@@ -130,144 +116,155 @@ export function Products() {
           </h1>
         </div>
 
-        { (!loading)?
-        <div>
-        
-
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-10 gap-2 justify-center">
-            {categories.map((cat, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setCategory(cat.strCategory)}
-                className={`rounded-3xl ${
-                  category === cat.strCategory
-                    ? 'bg-olive hover:bg-olive/100'
-                    : 'bg-black'
-                } px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black`}
-              >
-                {cat.strCategory}
-              </button>
-            ))}
+        {!loading ? (
+          <div>
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-10 gap-2 justify-center">
+              {categories.map((cat, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setCategory(cat.strCategory)}
+                  className={`rounded-3xl ${
+                    category === cat.strCategory
+                      ? "bg-olive hover:bg-olive/100"
+                      : "bg-black"
+                  } px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black`}
+                >
+                  {cat.strCategory}
+                </button>
+              ))}
+            </div>
           </div>
-
-        </div> 
-        :<LoaderSimple/>   }
-
-        
-
+        ) : (
+          <LoaderSimple />
+        )}
       </div>
 
-      { (!load)?
-      <section className="mx-auto w-full max-w-6xl px-4 py-4">
-      <div className="mt-6 flex flex-col">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden flex border border-gray-200 md:rounded-lg">
-              {/* Two columns for the tables */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                {/* Left side table */}
-                <div className="col-span-1">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {dishes
-                        .slice(0, Math.ceil(dishes.length / 2))
-                        .map((dish) => (
-                          <tr key={dish.idMeal}>
-                            <td className="whitespace-nowrap px-4 py-4">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                  <div className="h-10 w-10 flex-shrink-0">
-                                    <img
-                                      className="h-10 w-10 rounded-full object-cover"
-                                      src={dish.strMealThumb}
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="ml-4">
-                                    <div className="text-lg font-medium text-gray-900">
-                                      {dish.strMeal}
+      {!load ? (
+        <section className="mx-auto w-full max-w-6xl px-4 py-4">
+          <div className="mt-6 flex flex-col">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div className="overflow-hidden flex flex-col sm:flex-row border border-gray-200 md:rounded-lg">
+                  {/* Left side table */}
+                  <div className="w-full sm:w-1/2">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        {dishes
+                          .slice(0, Math.ceil(dishes.length / 2))
+                          .map((dish) => (
+                            <tr key={dish.idMeal}>
+                              <td className="whitespace-nowrap px-4 py-4">
+                                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between">
+                                  <div className="flex items-center">
+                                    <div className="h-10 w-10 sm:flex-shrink-0">
+                                      <img
+                                        className="h-10 w-10 rounded-full object-cover"
+                                        src={dish.strMealThumb}
+                                        alt=""
+                                      />
                                     </div>
-                                    <div className="text-xs mt-2 text-gray-700">
-                                      {dish.description}"Osso Buco - a
-                                      slow-cooked veal shank served with a
-                                      flavorful sauce"
+                                    <div className="ml-4">
+                                      <div className="text-lg font-medium text-gray-900">
+                                        {/* Using truncate and hover for long names */}
+                                        <div
+                                          className="truncate w-36"
+                                          title={dish.strMeal}
+                                        >
+                                          {dish.strMeal}
+                                        </div>
+                                      </div>
+                                      <div className="text-xs mt-2 text-gray-700">
+                                        {dish.description}
+                                      </div>
+                                      {/* Keep static content here */}
+                                      <div className="text-xs mt-2 text-gray-700">
+                                        "Osso Buco - a slow-cooked veal shank
+                                        served with a flavorful sauce"
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-left mt-2 sm:mt-0">
+                                    <div className="text-lg text-gray-900">
+                                      {dish.price}$8.45
+                                    </div>
+                                    <div className="text-sm font-medium mt-2 text-gray-700">
+                                      <a href="#" className="text-gray-700">
+                                        Shop Now &#8594;
+                                      </a>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="text-right">
-                                  <div className="text-lg text-gray-900">
-                                    {dish.price}$8.45
-                                  </div>
-                                  <div className="text-sm font-medium mt-2 text-gray-700">
-                                    <a href="#" className="text-gray-700">
-                                      Shop Now &#8594;
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
 
-                {/* Right side table */}
-                <div className="col-span-1">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {dishes
-                        .slice(Math.ceil(dishes.length / 2))
-                        .map((dish) => (
-                          <tr key={dish.idMeal}>
-                            <td className="whitespace-nowrap px-4 py-4">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                  <div className="h-10 w-10 flex-shrink-0">
-                                    <img
-                                      className="h-10 w-10 rounded-full object-cover"
-                                      src={dish.strMealThumb}
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="ml-4">
-                                    <div className="text-lg font-medium text-gray-900">
-                                      {dish.strMeal}
+                  {/* Right side table */}
+                  <div className="w-full sm:w-1/2 mt-6 sm:mt-0">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        {dishes
+                          .slice(Math.ceil(dishes.length / 2))
+                          .map((dish) => (
+                            <tr key={dish.idMeal}>
+                              <td className="whitespace-nowrap px-4 py-4">
+                                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between">
+                                  <div className="flex items-center">
+                                    <div className="h-10 w-10 sm:flex-shrink-0">
+                                      <img
+                                        className="h-10 w-10 rounded-full object-cover"
+                                        src={dish.strMealThumb}
+                                        alt=""
+                                      />
                                     </div>
-                                    <div className="text-xs mt-2 text-gray-700">
-                                      {dish.description}"Osso Buco - a
-                                      slow-cooked veal shank served with a
-                                      flavorful sauce"
+                                    <div className="ml-4">
+                                      <div className="text-lg font-medium text-gray-900">
+                                        {/* Using truncate and hover for long names */}
+                                        <div
+                                          className="truncate w-36"
+                                          title={dish.strMeal}
+                                        >
+                                          {dish.strMeal}
+                                        </div>
+                                      </div>
+                                      <div className="text-xs mt-2 text-gray-700">
+                                        {dish.description}
+                                      </div>
+                                      {/* Keep static content here */}
+                                      <div className="text-xs mt-2 text-gray-700">
+                                        "Osso Buco - a slow-cooked veal shank
+                                        served with a flavorful sauce"
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-left mt-2 sm:mt-0">
+                                    <div className="text-lg text-gray-900">
+                                      {dish.price}$8.45
+                                    </div>
+                                    <div className="text-sm font-medium mt-2 text-gray-700">
+                                      <a href="#" className="text-gray-700">
+                                        Shop Now &#8594;
+                                      </a>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="text-right">
-                                  <div className="text-lg text-gray-900">
-                                    {dish.price}$8.45
-                                  </div>
-                                  <div className="text-sm font-medium mt-2 text-gray-700">
-                                    <a href="#" className="text-gray-700">
-                                      Shop Now &#8594;
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    :<LoaderSimple/>   }
-                      
+        </section>
+      ) : (
+        <LoaderSimple />
+      )}
     </>
   );
 }
